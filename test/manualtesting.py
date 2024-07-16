@@ -40,6 +40,14 @@ print("\n>>>\tSearching for author: " + author)
 titles = a.search(author, search_type="author")
 print_results(titles)
 
+# test Publisher search
+# should print a result for the author specified at the top of the file.
+a = LibgenSearch()
+print("\n>>>\tSearching for publisher: " + publisher)
+
+titles = a.search(publisher, search_type="publisher")
+print_results(titles)
+
 
 # # test title filtering
 # # should print a result for the book specified at the top of the file,
@@ -71,6 +79,22 @@ print(
 
 titles = af.search_filtered(author, author_filters,search_type="author", exact_match=True)
 print_results(titles)
+
+# test publisher filtering
+# should print a result for the publisher specified at the top of the file,
+# conforming to the title_filters below.
+af = LibgenSearch()
+publisher_filters = {"Language": "German", "Year": "2009"}
+print(
+    "\n>>>\tSearching for publisher: "
+    + publisher
+    + " with filters --- "
+    + ", ".join([":".join(i) for i in publisher_filters.items()])
+)
+
+titles = af.search_filtered(author, publisher_filters,search_type="author", exact_match=True)
+print_results(titles)
+
 
 
 # # test exact filtering explicitly (using an Author search)
