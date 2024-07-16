@@ -9,20 +9,20 @@ ls = LibgenSearch()
 
 class TestBasicSearching:
     def test_title_search(self):
-        titles = ls.search_title(title)
+        titles = ls.search(title, search_type="title")
         first_result = titles[0]
 
         assert title in first_result["Title"]
 
     def test_author_search(self):
-        titles = ls.search_author(author)
+        titles = ls.search(author, search_type="author")
         first_result = titles[0]
 
         assert author in first_result["Author"]
 
     def test_title_filtering(self):
         title_filters = {"Year": "2007", "Extension": "epub"}
-        titles = ls.search_title_filtered(title, title_filters, exact_match=True)
+        titles = ls.search_filtered(title, title_filters,search_type="title", exact_match=True)
         first_result = titles[0]
 
         assert (title in first_result["Title"]) & fields_match(
@@ -31,7 +31,7 @@ class TestBasicSearching:
 
     def test_author_filtering(self):
         author_filters = {"Language": "German", "Year": "2009"}
-        titles = ls.search_author_filtered(author, author_filters, exact_match=True)
+        titles = ls.search_filtered(author, author_filters, search_type="author", exact_match=True)
         first_result = titles[0]
 
         assert (author in first_result["Author"]) & fields_match(
@@ -44,13 +44,13 @@ class TestBasicSearching:
         exact_filters = {"Extension": "PDF"}
         # if exact_match = True, this will filter out all results as
         # "pdf" is always written lower case on Library Genesis
-        titles = ls.search_author_filtered(author, exact_filters, exact_match=True)
+        titles = ls.search_filtered(author, exact_filters,search_type="author",exact_match=True)
 
         assert len(titles) == 0
 
     def test_non_exact_filtering(self):
         non_exact_filters = {"Extension": "PDF"}
-        titles = ls.search_author_filtered(author, non_exact_filters, exact_match=False)
+        titles = ls.search_filtered(author, non_exact_filters,search_type="author", exact_match=False)
         first_result = titles[0]
 
         assert (author in first_result["Author"]) & fields_match(
@@ -59,7 +59,7 @@ class TestBasicSearching:
 
     def test_non_exact_partial_filtering(self):
         partial_filters = {"Extension": "p", "Year": "200"}
-        titles = ls.search_title_filtered(title, partial_filters, exact_match=False)
+        titles = ls.search_filtered(title, partial_filters,search_type="title", exact_match=False)
         first_result = titles[0]
 
         assert (title in first_result["Title"]) & fields_match(
@@ -68,14 +68,14 @@ class TestBasicSearching:
 
     def test_exact_partial_filtering(self):
         exact_partial_filters = {"Extension": "p"}
-        titles = ls.search_title_filtered(
-            title, exact_partial_filters, exact_match=True
+        titles = ls.search_filtered(
+            title, exact_partial_filters, search_type="title", exact_match=True
         )
 
         assert len(titles) == 0
 
     def test_resolve_download_links(self):
-        titles = ls.search_author(author)
+        titles = ls.search(author,search_type="author")
         title_to_download = titles[0]
         dl_links = ls.resolve_download_links(title_to_download)
 
@@ -87,7 +87,7 @@ class TestBasicSearching:
     # should return an error if search query is less than 3 characters long
     def test_raise_error_on_short_search(self):
         with pytest.raises(Exception):
-            titles = ls.search_title(title[0:2])
+            titles = ls.search(title[0:2], search_type="title")
 
 ####################
 # Helper Functions #

@@ -13,6 +13,7 @@ from libgen_api.libgen_search import LibgenSearch
 import json
 
 title = "Pride and Prejudice"
+publisher = "Springer"
 author = "Agatha Christie"
 
 
@@ -27,7 +28,7 @@ def print_results(titles_array):
 t = LibgenSearch()
 print("\n>>>\tSearching for title: " + title)
 
-titles = t.search_title(title)
+titles = t.search(title, search_type="title")
 print_results(titles)
 
 
@@ -36,13 +37,13 @@ print_results(titles)
 a = LibgenSearch()
 print("\n>>>\tSearching for author: " + author)
 
-titles = a.search_author(author)
+titles = a.search(author, search_type="author")
 print_results(titles)
 
 
-# test title filtering
-# should print a result for the book specified at the top of the file,
-# conforming to the title_filters below.
+# # test title filtering
+# # should print a result for the book specified at the top of the file,
+# # conforming to the title_filters below.
 tf = LibgenSearch()
 title_filters = {"Year": "2007", "Extension": "epub"}
 print(
@@ -52,7 +53,7 @@ print(
     + ", ".join([":".join(i) for i in title_filters.items()])
 )
 
-titles = tf.search_title_filtered(title, title_filters, exact_match=True)
+titles = tf.search_filtered(title, title_filters, search_type="title", exact_match=True,)
 print_results(titles)
 
 
@@ -68,12 +69,12 @@ print(
     + ", ".join([":".join(i) for i in author_filters.items()])
 )
 
-titles = af.search_author_filtered(author, author_filters, exact_match=True)
+titles = af.search_filtered(author, author_filters,search_type="author", exact_match=True)
 print_results(titles)
 
 
-# test exact filtering explicitly (using an Author search)
-# should print no results as the filter exclude all results.
+# # test exact filtering explicitly (using an Author search)
+# # should print no results as the filter exclude all results.
 afe = LibgenSearch()
 exact_filters = {
     "Extension": "PDF"
@@ -86,7 +87,7 @@ print(
     + " & exact_match == True"
 )
 
-titles = afe.search_author_filtered(author, exact_filters, exact_match=True)
+titles = afe.search_filtered(author, exact_filters,search_type="author", exact_match=True)
 print_results(titles)
 
 
@@ -105,7 +106,7 @@ print(
     + " & exact_match == FALSE"
 )
 
-titles = afne.search_author_filtered(author, non_exact_filters, exact_match=False)
+titles = afne.search_filtered(author, non_exact_filters,search_type="author", exact_match=False)
 print_results(titles)
 
 
@@ -122,7 +123,7 @@ print(
     + " & exact_match == False"
 )
 
-titles = tfpne.search_title_filtered(title, partial_filters, exact_match=False)
+titles = tfpne.search_filtered(title, partial_filters,search_type="title",exact_match=False)
 print_results(titles)
 
 
@@ -138,7 +139,7 @@ print(
     + " & exact_match == True"
 )
 
-titles = tfpe.search_title_filtered(title, exact_partial_filters, exact_match=True)
+titles = tfpe.search_filtered(title, exact_partial_filters,search_type="title", exact_match=True)
 print_results(titles)
 
 
@@ -148,7 +149,7 @@ arml = LibgenSearch()
 print("\n>>>\tSearching for title: " + title + " and resolving download links")
 
 # Author hard-coded so that it pairs with title (currently pride and prejudice)
-titles = arml.search_author("Jane Austen")
+titles = arml.search("Jane Austen", search_type="author")
 item_to_download = titles[0]
 download_links = arml.resolve_download_links(item_to_download)
 print_results([download_links])
